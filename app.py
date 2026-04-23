@@ -200,7 +200,8 @@ def carmatch(engine, drive_style, space, usage, priority, min_km, max_km, min_ye
         result_rows.append(group.sample(min(limit, len(group)), random_state=None))
 
     top = pd.concat(result_rows).sample(frac=1, random_state=None).head(8)
-    return top[['manufacturer', 'model', 'year', 'odometer', 'fuel', 'drive', 'cylinders', 'type', 'cluster_name']].round(0)
+    top = top[['manufacturer', 'model', 'year', 'odometer', 'fuel', 'drive', 'cylinders', 'type', 'cluster_name']].round(0)
+    return top.rename(columns={'cluster_name': 'Category'})
 
 # ── 8. Gradio UI ──────────────────────────────────────────────────────────────
 
@@ -221,7 +222,8 @@ main_ui = gr.Interface(
     inputs=main_inputs,
     outputs=gr.Dataframe(label="🚗 Your CarMatch Results"),
     title="🚗 CarMatch – Find Your Perfect Car",
-    description="Select your preferences and find the car type that fits you – not ads, not listings, just the right kind of car."
+    description="Select your preferences and find the car type that fits you – not ads, not listings, just the right kind of car.",
+    css="footer { display: none !important; }"
 )
 
 app = main_ui
